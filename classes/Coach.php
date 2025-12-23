@@ -23,6 +23,20 @@ class Coach extends Utilisateur
     {
         return $this->prenom;
     }
+    public function getDiscipline()
+    {
+        return $this->discipline;
+    }
+
+    public function getAnneesExperience()
+    {
+        return $this->annees_experience;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
     public function create($nom, $prenom, $discipline, $annees_experience, $description)
     {
         if (!$this->id_user) {

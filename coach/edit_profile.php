@@ -1,29 +1,29 @@
 <?php
 require_once '../includes/check_auth.php';
-require_once '../classes/Coach.php';
-
 checkRole('coach');
 
-$coach = new Coach();
-$coachData = $coach->getIdCoachByUserId($_SESSION['id_user']);
+require_once '../classes/Coach.php';
 
-$message = '';
+$coach = new Coach();
+$coach->loadByUserId($_SESSION['id_user']);
+
+$success = '';
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $coach->updateProfile(
-        $_POST['nom'],
-        $_POST['prenom'],
-        $_POST['discipline'],
-        $_POST['annees_experience'],
-        $_POST['description'],
-        $_SESSION['id_user']
-    );
+    $nom = $_POST['nom'];
+    $prenom = $_POST['prenom'];
+    $discipline = $_POST['discipline'];
+    $annees = $_POST['annees_experience'];
+    $description = $_POST['description'];
 
-    $_SESSION['user_name'] = $_POST['nom'] . ' ' . $_POST['prenom'];
-    $message = "Profil mis à jour avec succès ✅";
-
-    // recharger les données
-    $coachData = $coach->getIdCoachByUserId($_SESSION['user_id']);
+    if ($coach->updateProfile($nom, $prenom, $discipline, $annees, $description, $_SESSION['id_user'])) {
+        $success = "Profil mis à jour avec succès";
+        $coach->loadByUserId($_SESSION['id_user']); 
+        $_SESSION['user_name'] = $nom . ' ' . $prenom;
+    } else {
+        $error = "Erreur lors de la mise à jour";
+    }
 }
 ?>
 
@@ -31,63 +31,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Modifier mon profil</title>
+    <title>Modifier Profil</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex min-h-screen bg-gray-50">
+<body class="flex min-h-screen bg-gray-100">
 
 <?php include '../includes/aside_coach.php'; ?>
 
-<main class="flex-1 lg:ml-72 p-6 md:p-10">
-    <h1 class="text-3xl font-bold mb-6">Mon profil</h1>
+<main class="flex-1 lg:ml-72 p-8">
+    <h1 class="text-3xl font-bold mb-6">Modifier mon profil</h1>
 
-    <?php if ($message): ?>
-        <div class="bg-green-100 text-green-700 px-4 py-3 rounded-lg mb-6">
-            <?= $message ?>
-        </div>
+    <?php if ($success): ?>
+        <div class="bg-green-100 text-green-700 p-3 rounded mb-4"><?= $success ?></div>
     <?php endif; ?>
 
-    <form method="POST" class="max-w-2xl bg-white p-8 rounded-2xl shadow space-y-5">
+    <?php if ($error): ?>
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-4"><?= $error ?></div>
+    <?php endif; ?>
+
+    <form method="POST" class="bg-white p-6 rounded-xl shadow max-w-xl space-y-4">
 
         <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="text-sm text-gray-600">Nom</label>
-                <input type="text" name="nom"
-                       value="<?= $coachData['nom'] ?>"
-                       class="input" required>
-            </div>
+            <input type="text" name="nom" value="<?= htmlspecialchars($coach->getNom()) ?>"
+                   class="input" placeholder="Nom" required>
 
-            <div>
-                <label class="text-sm text-gray-600">Prénom</label>
-                <input type="text" name="prenom"
-                       value="<?= $coachData['prenom'] ?>"
-                       class="input" required>
-            </div>
+            <input type="text" name="prenom" value="<?= htmlspecialchars($coach->getPrenom()) ?>"
+                   class="input" placeholder="Prénom" required>
         </div>
 
-        <div>
-            <label class="text-sm text-gray-600">Discipline</label>
-            <input type="text" name="discipline"
-                   value="<?= $coachData['discipline'] ?>"
-                   class="input" required>
-        </div>
+        <input type="text" name="discipline" value="<?= htmlspecialchars($coach->getDiscipline()) ?>"
+               class="input" placeholder="Discipline" required>
 
-        <div>
-            <label class="text-sm text-gray-600">Années d’expérience</label>
-            <input type="number" name="annees_experience"
-                   value="<?= $coachData['annees_experience'] ?>"
-                   class="input" min="0" required>
-        </div>
+        <input type="number" name="annees_experience"
+               value="<?= htmlspecialchars($coach->getAnneesExperience()) ?>"
+               class="input" placeholder="Années d'expérience" required>
 
-        <div>
-            <label class="text-sm text-gray-600">Description</label>
-            <textarea name="description"
-                      class="input h-28 resize-none"><?= $coachData['description'] ?></textarea>
-        </div>
+        <textarea name="description" rows="4"
+                  class="input"><?= htmlspecialchars($coach->getDescription()) ?></textarea>
 
-        <button
-            class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl transition">
-            Enregistrer les modifications
+        <button class="bg-indigo-600 text-white px-6 py-3 rounded-xl hover:bg-indigo-700">
+            Enregistrer
         </button>
     </form>
 </main>
@@ -98,11 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     padding: 12px;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
-    outline: none;
-}
-.input:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 2px rgba(99,102,241,.2);
 }
 </style>
 
