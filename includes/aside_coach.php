@@ -1,5 +1,5 @@
 <button id="toggleCoach"
-  class="lg:hidden fixed top-4 left-4 z-50 bg-indigo-600 text-white p-3 rounded-xl shadow-lg">
+  class="lg:hidden fixed top-4 right-4 z-50 bg-indigo-600 text-white p-3 rounded-xl shadow-lg">
   ☰
 </button>
 
