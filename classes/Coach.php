@@ -57,7 +57,6 @@ class Coach extends Utilisateur
         return $stmt->fetchColumn();
     }
 
-
     public function loadByUserId($id_user)
     {
         $stmt = $this->conn->prepare("SELECT * FROM coach WHERE id_user = :id_user");
