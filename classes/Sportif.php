@@ -1,17 +1,20 @@
 <?php
 require_once 'Utilisateur.php';
 
-class Sportif extends Utilisateur {
+class Sportif extends Utilisateur
+{
     private $nom;
     private $prenom;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    
-    public function create($nom, $prenom) {
-        if(!$this->id_user) {
+
+    public function create($nom, $prenom)
+    {
+        if (!$this->id_user) {
             throw new Exception("id_user non défini. Inscription échouée.");
         }
 
@@ -27,5 +30,22 @@ class Sportif extends Utilisateur {
 
         $this->nom = $nom;
         $this->prenom = $prenom;
+    }
+    public function loadByUserId($id_user)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM sportif WHERE id_user = :id_user");
+        $stmt->execute(['id_user' => $id_user]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($data) {
+            $this->nom = $data['nom'];
+            $this->prenom = $data['prenom'];
+        }
+    }
+     public function getNom() {
+        return $this->nom;
+    }
+
+    public function getPrenom() {
+        return $this->prenom;
     }
 }

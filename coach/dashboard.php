@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/auth_check.php';
+require_once '../includes/check_auth.php';
 checkRole('coach');
 ?>
 

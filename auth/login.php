@@ -1,5 +1,9 @@
 <?php
+session_start();
+
 require_once '../classes/Utilisateur.php';
+require_once '../classes/Coach.php';
+require_once '../classes/Sportif.php';
 
 $error = '';
 
@@ -9,23 +13,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $user = new Utilisateur();
     if ($user->login($email, $password)) {
-        session_start();
-        $_SESSION['user_id'] = $user->getIdUser();
+        // Stocker les infos utilisateur dans la session
+        $_SESSION['id_user'] = $user->getIdUser();
         $_SESSION['role'] = $user->getRole();
+        $_SESSION['email'] = $email;
 
-        // Redirection selon le rôle
-        switch ($user->getRole()) {
-            case 'coach':
-                header('Location: ../coach/dashboard.php');
-                break;
-            case 'sportif':
-                header('Location: ../sportif/dashboard.php');
-                break;
-            case 'admin':
-                header('Location: ../admin/dashboard.php');
-                break;
+        // Récupérer nom et prénom selon le rôle
+        if ($user->getRole() === 'coach') {
+            $coach = new Coach();
+            $coach->loadByUserId($user->getIdUser());
+            $_SESSION['user_name'] = $coach->getNom() . ' ' . $coach->getPrenom();
+            header('Location: ../coach/dashboard.php');
+            exit;
+        } elseif ($user->getRole() === 'sportif') {
+            $sportif = new Sportif();
+            $sportif->loadByUserId($user->getIdUser());
+            $_SESSION['user_name'] = $sportif->getNom() . ' ' . $sportif->getPrenom();
+            header('Location: ../sportif/dashboard.php');
+            exit;
+        } else {
+            $_SESSION['user_name'] = 'Admin';
+            header('Location: ../admin/dashboard.php');
+            exit;
         }
-        exit;
+
     } else {
         $error = "Email ou mot de passe incorrect.";
     }
