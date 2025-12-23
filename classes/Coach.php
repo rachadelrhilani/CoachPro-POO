@@ -14,11 +14,13 @@ class Coach extends Utilisateur
         parent::__construct();
     }
 
-     public function getNom() {
+    public function getNom()
+    {
         return $this->nom;
     }
 
-    public function getPrenom() {
+    public function getPrenom()
+    {
         return $this->prenom;
     }
     public function create($nom, $prenom, $discipline, $annees_experience, $description)
@@ -46,6 +48,15 @@ class Coach extends Utilisateur
         $this->annees_experience = $annees_experience;
         $this->description = $description;
     }
+    public function getIdCoachByUserId($id_user)
+    {
+        $stmt = $this->conn->prepare(
+            "SELECT id_coach FROM coach WHERE id_user = :id_user"
+        );
+        $stmt->execute(['id_user' => $id_user]);
+        return $stmt->fetchColumn();
+    }
+
 
     public function loadByUserId($id_user)
     {

@@ -15,7 +15,7 @@
       </div>
       <div>
         <h3 class="font-semibold"><?= $_SESSION['user_name'] ?? 'Coach' ?></h3>
-        <p class="text-sm text-indigo-200">Coach sportif</p>
+        <p class="text-sm text-indigo-200"><?=$_SESSION['role']?></p>
       </div>
     </div>
   </div>
