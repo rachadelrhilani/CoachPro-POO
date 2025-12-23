@@ -56,7 +56,22 @@ class Coach extends Utilisateur
         $stmt->execute(['id_user' => $id_user]);
         return $stmt->fetchColumn();
     }
-
+    public function updateProfile($nom, $prenom, $discipline, $annees, $description, $id_user)
+    {
+        $stmt = $this->conn->prepare(
+            "UPDATE coach 
+         SET nom=?, prenom=?, discipline=?, annees_experience=?, description=?
+         WHERE id_user=?"
+        );
+        return $stmt->execute([
+            $nom,
+            $prenom,
+            $discipline,
+            $annees,
+            $description,
+            $id_user
+        ]);
+    }
     public function loadByUserId($id_user)
     {
         $stmt = $this->conn->prepare("SELECT * FROM coach WHERE id_user = :id_user");
