@@ -8,7 +8,6 @@
          text-white transform -translate-x-full lg:translate-x-0
          transition-transform duration-300 z-40 shadow-2xl">
 
-
   <div class="p-6 border-b border-indigo-500/30">
     <div class="flex items-center gap-3">
       <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-xl">
@@ -22,23 +21,23 @@
   </div>
 
   <nav class="p-4 space-y-1">
-    <a href="dashboard.php" class="menu-item active">
+    <a href="../coach/dashboard.php" class="menu-item active">
       Dashboard
     </a>
 
-    <a href="edit-profile.php" class="menu-item">
+    <a href="../coach/edit_profile.php" class="menu-item">
       Mon profil
     </a>
 
-    <a href="seances.php" class="menu-item">
+    <a href="../coach/mes_seances.php" class="menu-item">
       Mes séances
     </a>
 
-    <a href="add-seance.php" class="menu-item">
+    <a href="../coach/ajouter_seance.php" class="menu-item">
        Ajouter séance
     </a>
 
-    <a href="/logout" class="menu-item logout">
+    <a href="../auth/logout.php" class="menu-item logout">
       Déconnexion
     </a>
   </nav>
@@ -64,6 +63,7 @@
   background: rgba(255,0,0,.2);
 }
 </style>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 toggleCoach.onclick = () =>
