@@ -37,6 +37,12 @@ class Coach extends Utilisateur
     {
         return $this->description;
     }
+    public function getAll()
+    {
+        $stmt = $this->conn->query("SELECT * FROM coach");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function create($nom, $prenom, $discipline, $annees_experience, $description)
     {
         if (!$this->id_user) {
