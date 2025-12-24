@@ -104,4 +104,21 @@ class Reservation
         $stmt->execute([$id_sportif]);
         return $stmt->fetchColumn();
     }
+    public function getProchaineReservation($id_sportif)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT r.id_reservation,
+               s.date_seance, s.heure, s.duree,
+               c.nom, c.prenom, c.discipline
+        FROM reservation r
+        JOIN seance s ON r.id_seance = s.id_seance
+        JOIN coach c ON s.id_coach = c.id_coach
+        WHERE r.id_sportif = ?
+        AND CONCAT(s.date_seance, ' ', s.heure) >= NOW()
+        ORDER BY s.date_seance ASC, s.heure ASC
+        LIMIT 1
+    ");
+        $stmt->execute([$id_sportif]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
