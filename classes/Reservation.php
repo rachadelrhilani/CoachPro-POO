@@ -1,4 +1,4 @@
-<?php 
+<?php
 class Reservation
 {
     private $conn;
@@ -7,6 +7,7 @@ class Reservation
     {
         $this->conn = (new Database())->getConnection();
     }
+    /* annuler la reservation */
     public function cancel($id_reservation, $id_sportif)
     {
         // récupérer la séance liée
@@ -19,12 +20,12 @@ class Reservation
 
         if (!$id_seance) return false;
 
-        // supprimer la réservation
+
         $this->conn->prepare(
             "DELETE FROM reservation WHERE id_reservation = ?"
         )->execute([$id_reservation]);
 
-        // remettre la séance disponible
+
         $this->conn->prepare(
             "UPDATE seance SET statut = 'disponible' WHERE id_seance = ?"
         )->execute([$id_seance]);
@@ -56,7 +57,7 @@ class Reservation
         $stmt->execute([$id_seance]);
         return $stmt->fetchColumn() > 0;
     }
-     public function getBySportif($id_sportif)
+    public function getBySportif($id_sportif)
     {
         $stmt = $this->conn->prepare("
             SELECT r.id_reservation, r.date_reservation,
@@ -70,5 +71,13 @@ class Reservation
         ");
         $stmt->execute(['id_sportif' => $id_sportif]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function countBySportif($id_sportif)
+    {
+        $stmt = $this->conn->prepare(
+            "SELECT COUNT(*) FROM reservation WHERE id_sportif = ?"
+        );
+        $stmt->execute([$id_sportif]);
+        return $stmt->fetchColumn();
     }
 }
