@@ -10,6 +10,17 @@ class Seance
         $this->conn = (new Database())->getConnection();
     }
     // 
+    public function getAvailableByCoach($id_coach)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT * FROM seance 
+        WHERE id_coach = ? AND statut = 'disponible'
+        ORDER BY date_seance
+    ");
+        $stmt->execute([$id_coach]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getByCoach($id_coach)
     {
         $sql = "SELECT * FROM seance WHERE id_coach = :id_coach ORDER BY date_seance DESC";
