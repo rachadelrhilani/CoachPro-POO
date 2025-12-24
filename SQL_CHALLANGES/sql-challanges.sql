@@ -12,5 +12,15 @@ USE coach_platform;
 
 /* 1 */ SELECT count(*) AS nombretotalseance,coach_id FROM seances GROUP BY coach_id;
 /* 2 */ SELECT count(*) AS nombretotalseance,coach_id FROM seances WHERE statut="reservee" GROUP BY coach_id;
-/* 3 */ SELECT count(*) AS nombretotalreserve,count(*) AS nombretotalseance FROM seances WHERE statut="reservee"
+/* 3 */ SELECT 
+    u.nom,
+    u.prenom,
+    ROUND((COUNT(r.id) / COUNT(s.id)) * 100, 2) AS taux_reservation_pct
+FROM 
+    coachs c
+    INNER JOIN users u ON c.user_id = u.id
+    INNER JOIN seances s ON c.user_id = s.coach_id
+    LEFT JOIN reservations r ON s.id = r.seance_id
+GROUP BY 
+    c.user_id, u.nom, u.prenom;
 /* 4 */ SELECT count(*) AS nombretotalseance,coach_id FROM seances GROUP BY coach_id HAVING nombretotalseance >= 3; 
