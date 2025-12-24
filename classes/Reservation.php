@@ -80,4 +80,16 @@ class Reservation
         $stmt->execute([$id_sportif]);
         return $stmt->fetchColumn();
     }
+    public function countAVenir($id_sportif)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT COUNT(*)
+        FROM reservation r
+        JOIN seance s ON r.id_seance = s.id_seance
+        WHERE r.id_sportif = ?
+        AND CONCAT(s.date_seance, ' ', s.heure) >= NOW()
+    ");
+        $stmt->execute([$id_sportif]);
+        return $stmt->fetchColumn();
+    }
 }
