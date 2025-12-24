@@ -34,7 +34,7 @@ $prochaine   = $reservation->getProchaineReservation($idSportif);
     <div>
         <h1 class="text-3xl font-bold">Dashboard</h1>
         <p class="text-gray-600 mt-1">
-            Bienvenue <?= htmlspecialchars($_SESSION['user_name'] ?? 'Sportif') ?> 👋
+            Bienvenue <?= htmlspecialchars($_SESSION['user_name'] ?? 'Sportif') ?> 
         </p>
     </div>
 
@@ -42,17 +42,17 @@ $prochaine   = $reservation->getProchaineReservation($idSportif);
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white p-6 rounded-xl shadow">
             <p class="text-gray-500">Séances réservées</p>
-            <p class="text-3xl font-bold text-indigo-600"><?= $total ?></p>
+            <p class="text-3xl font-bold text-indigo-600"><?= htmlspecialchars($total) ?></p>
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow">
             <p class="text-gray-500">Séances à venir</p>
-            <p class="text-3xl font-bold text-green-600"><?= $aVenir ?></p>
+            <p class="text-3xl font-bold text-green-600"><?= htmlspecialchars($aVenir) ?></p>
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow">
             <p class="text-gray-500">Séances terminées</p>
-            <p class="text-3xl font-bold text-gray-700"><?= $terminees ?></p>
+            <p class="text-3xl font-bold text-gray-700"><?= htmlspecialchars($terminees) ?></p>
         </div>
     </div>
 
