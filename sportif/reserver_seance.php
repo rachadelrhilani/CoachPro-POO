@@ -8,7 +8,7 @@ require_once '../classes/Sportif.php';
 $id_seance = $_GET['id'] ?? null;
 
 $sportifObj = new Sportif();
-$id_sportif = $sportifObj->loadByUserId($_SESSION['user_id']);
+$id_sportif = $sportifObj->loadByUserId($_SESSION['id_user']);
 
 $reservation = new Reservation();
 $reservation->reserver($id_seance, $id_sportif);

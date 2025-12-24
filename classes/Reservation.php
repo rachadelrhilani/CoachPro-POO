@@ -7,7 +7,30 @@ class Reservation
     {
         $this->conn = (new Database())->getConnection();
     }
+    public function cancel($id_reservation, $id_sportif)
+    {
+        // récupérer la séance liée
+        $stmt = $this->conn->prepare("
+            SELECT id_seance FROM reservation
+            WHERE id_reservation = ? AND id_sportif = ?
+        ");
+        $stmt->execute([$id_reservation, $id_sportif]);
+        $id_seance = $stmt->fetchColumn();
 
+        if (!$id_seance) return false;
+
+        // supprimer la réservation
+        $this->conn->prepare(
+            "DELETE FROM reservation WHERE id_reservation = ?"
+        )->execute([$id_reservation]);
+
+        // remettre la séance disponible
+        $this->conn->prepare(
+            "UPDATE seance SET statut = 'disponible' WHERE id_seance = ?"
+        )->execute([$id_seance]);
+
+        return true;
+    }
     public function reserver($id_seance, $id_sportif)
     {
         $this->conn->beginTransaction();
@@ -24,5 +47,20 @@ class Reservation
 
         $this->conn->commit();
         return true;
+    }
+     public function getBySportif($id_sportif)
+    {
+        $stmt = $this->conn->prepare("
+            SELECT r.id_reservation, r.date_reservation,
+                   s.date_seance, s.heure, s.duree, s.statut,
+                   c.nom, c.prenom, c.discipline
+            FROM reservation r
+            JOIN seance s ON s.id_seance = r.id_seance
+            JOIN coach c ON c.id_coach = s.id_coach
+            WHERE r.id_sportif = :id_sportif
+            ORDER BY s.date_seance DESC
+        ");
+        $stmt->execute(['id_sportif' => $id_sportif]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
