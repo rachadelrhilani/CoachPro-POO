@@ -6,7 +6,7 @@ require_once '../classes/Reservation.php';
 require_once '../classes/Sportif.php';
 
 $sportif = new Sportif();
-$id_sportif = $sportif->loadByUserId($_SESSION['id_user']);
+$id_sportif = $sportif->getIdSportifByUserId($_SESSION['id_user']);
 
 $reservationModel = new Reservation();
 

@@ -48,6 +48,14 @@ class Reservation
         $this->conn->commit();
         return true;
     }
+    public function isSeanceReserved($id_seance)
+    {
+        $stmt = $this->conn->prepare(
+            "SELECT COUNT(*) FROM reservation WHERE id_seance = ?"
+        );
+        $stmt->execute([$id_seance]);
+        return $stmt->fetchColumn() > 0;
+    }
      public function getBySportif($id_sportif)
     {
         $stmt = $this->conn->prepare("

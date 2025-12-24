@@ -31,6 +31,19 @@ class Sportif extends Utilisateur
         $this->nom = $nom;
         $this->prenom = $prenom;
     }
+    public function getIdSportifByUserId($id_user)
+    {
+        $stmt = $this->conn->prepare(
+            "SELECT id_sportif 
+             FROM sportif 
+             WHERE id_user = ?"
+        );
+
+        $stmt->execute([$id_user]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result ? $result['id_sportif'] : null;
+    }
     public function loadByUserId($id_user)
     {
         $stmt = $this->conn->prepare("SELECT * FROM sportif WHERE id_user = :id_user");
