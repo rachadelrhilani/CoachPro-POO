@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <!-- Menu -->
+  
   <nav class="p-4 space-y-1">
     <a href="../sportif/dashboard.php" class="menu-item active">
       Dashboard
