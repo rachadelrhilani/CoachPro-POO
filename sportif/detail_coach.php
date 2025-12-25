@@ -36,11 +36,11 @@ $seances = $seanceObj->getAvailableByCoach($id_coach);
 <tbody>
 <?php foreach ($seances as $s): ?>
 <tr class="border-t">
-<td class="p-3"><?= $s['date_seance'] ?></td>
-<td class="p-3"><?= $s['heure'] ?></td>
-<td class="p-3"><?= $s['duree'] ?> min</td>
+<td class="p-3"><?= htmlspecialchars($s['date_seance']) ?></td>
+<td class="p-3"><?= htmlspecialchars($s['heure']) ?></td>
+<td class="p-3"><?= htmlspecialchars($s['duree']) ?> min</td>
 <td class="p-3">
-    <a href="reserver_seance.php?id=<?= $s['id_seance'] ?>"
+    <a href="reserver_seance.php?id=<?= htmlspecialchars($s['id_seance']) ?>"
        class="bg-emerald-600 text-white px-4 py-1 rounded">
        Réserver
     </a>

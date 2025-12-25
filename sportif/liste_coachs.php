@@ -25,12 +25,12 @@ $coachs = $coachObj->getAll();
 <?php foreach ($coachs as $coach): ?>
 <div class="bg-white p-5 rounded-xl shadow">
     <h2 class="text-xl font-semibold">
-        <?= $coach['nom'] ?> <?= $coach['prenom'] ?>
+        <?= htmlspecialchars($coach['nom']) ?> <?= htmlspecialchars($coach['prenom']) ?>
     </h2>
-    <p class="text-sm text-gray-500"><?= $coach['discipline'] ?></p>
-    <p class="mt-2 text-gray-600"><?= $coach['description'] ?></p>
+    <p class="text-sm text-gray-500"><?= htmlspecialchars($coach['discipline']) ?></p>
+    <p class="mt-2 text-gray-600"><?= htmlspecialchars($coach['description']) ?></p>
 
-    <a href="detail_coach.php?id=<?= $coach['id_coach'] ?>"
+    <a href="detail_coach.php?id=<?= htmlspecialchars($coach['id_coach']) ?>"
        class="inline-block mt-4 text-indigo-600 font-semibold">
        Voir séances →
     </a>

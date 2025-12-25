@@ -16,12 +16,12 @@ $id_seance = $_GET['id'];
 $sportif = new Sportif();
 $id_sportif = $sportif->getIdSportifByUserId($_SESSION['id_user']);
 
-// Protection double réservation
+// protection double réservation
 if ($reservation->isSeanceReserved($id_seance)) {
-    die("❌ Cette séance est déjà réservée.");
+    die(" Cette séance est déjà réservée.");
 }
 
-// Réservation
+// reservation
 $reservation->reserver($id_seance, $id_sportif);
 
 header('Location: mes_reservations.php');
