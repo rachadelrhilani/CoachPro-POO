@@ -17,7 +17,7 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-/* Liste des séances */
+/* liste des séances */
 $seances = $seanceModel->getByCoach($id_coach);
 ?>
 
