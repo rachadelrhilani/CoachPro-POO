@@ -7,7 +7,7 @@ CREATE DATABASE coach_platform CHARACTER SET utf8mb4; */
 USE coach_platform;
 
 /* =====================================================
-  Top coach par taux de réservation
+  challanges 1
 ===================================================== */
 
 /* 1 */ SELECT count(*) AS nombretotalseance,coach_id FROM seances GROUP BY coach_id;
@@ -15,7 +15,7 @@ USE coach_platform;
 /* 3 */ SELECT 
     u.nom,
     u.prenom,
-    ROUND((COUNT(r.id) / COUNT(s.id)) * 100, 2) AS taux_reservation_pct
+    (COUNT(r.id) / COUNT(s.id)) * 100, 2 AS taux_reservation_pct
 FROM 
     coachs c
     INNER JOIN users u ON c.user_id = u.id
@@ -24,3 +24,7 @@ FROM
 GROUP BY 
     c.user_id, u.nom, u.prenom;
 /* 4 */ SELECT count(*) AS nombretotalseance,coach_id FROM seances GROUP BY coach_id HAVING nombretotalseance >= 3; 
+/* =====================================================
+  challanges 2
+===================================================== */
+/* 1 */
