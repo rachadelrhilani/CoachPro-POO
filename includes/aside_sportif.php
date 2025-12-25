@@ -1,3 +1,6 @@
+<?php
+$currentPage = basename($_SERVER['PHP_SELF']);
+?>
 <button id="toggleSportif"
   class="lg:hidden fixed top-4 right-4 z-50 bg-emerald-600 text-white p-3 rounded-xl shadow-lg">
   ☰
