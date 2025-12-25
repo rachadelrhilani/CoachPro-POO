@@ -26,15 +26,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
   
   <nav class="p-4 space-y-1">
-    <a href="../sportif/dashboard.php" class="menu-item active">
+    <a href="../sportif/dashboard.php" class="menu-item <?= $currentPage == 'dashboard.php' ? 'active' : '' ?>">
       Dashboard
     </a>
 
-    <a href="../sportif/liste_coachs.php" class="menu-item">
+    <a href="../sportif/liste_coachs.php" class="menu-item <?= $currentPage == 'liste_coachs.php' ? 'active' : '' ?>">
       Coachs disponibles
     </a>
 
-    <a href="../sportif/mes_reservations.php" class="menu-item">
+    <a href="../sportif/mes_reservations.php" class="menu-item <?= $currentPage == 'mes_reservations.php' ? 'active' : '' ?>">
       Mes réservations
     </a>
 
