@@ -34,7 +34,9 @@ class Utilisateur
     {
         $stmt = $this->conn->prepare("SELECT id_user FROM utilisateur WHERE email = :email");
         $stmt->execute(['email' => $email]);
-        if ($stmt->rowCount() > 0) return false;
+        if ($stmt->rowCount() > 0){
+            return false;
+        } 
 
         $hashed = password_hash($password, PASSWORD_DEFAULT);
 

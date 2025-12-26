@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = $user->getRole();
         $_SESSION['email'] = $email;
 
-        // recuperer nom et prenom selon le rôle
+        // recuperer nom et prenom selon le role
         if ($user->getRole() === 'coach') {
             $coach = new Coach();
             $coach->loadByUserId($user->getIdUser());
@@ -50,6 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Connexion</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body{
+            background-repeat: no-repeat;
+        }
+    </style>
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-700 via-indigo-600 to-indigo-800">
 
