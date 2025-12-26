@@ -62,7 +62,7 @@ $seances = $seanceModel->getByCoach($id_coach);
                             <td class="p-3">
                                 <span class="px-3 py-1 rounded-full text-xs
                                     <?= $s['statut'] === 'reservee' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' ?>">
-                                    <?= ucfirst($s['statut']) ?>
+                                    <?= htmlspecialchars(ucfirst($s['statut'])) ?>
                                 </span>
                             </td>
                             <td class="p-3 text-center space-x-2">
