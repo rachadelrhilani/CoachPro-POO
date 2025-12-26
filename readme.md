@@ -35,7 +35,7 @@ Les coachs peuvent proposer des séances, les sportifs peuvent les réserver et 
 ---
 
 ## Structure du projet
-`coach-sportif-platform/
+```coach-sportif-platform/
 │
 ├── classes/
 │ ├── Utilisateur.php # Classe mère utilisateur
@@ -78,7 +78,7 @@ Les coachs peuvent proposer des séances, les sportifs peuvent les réserver et 
 │ ├── js/
 │ └── images/
 │
-└── README.md`
+└── README.md```
 
 ---
 
