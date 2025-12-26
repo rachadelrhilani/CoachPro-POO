@@ -97,4 +97,4 @@ Les coachs peuvent proposer des séances, les sportifs peuvent les réserver et 
 
 1. Cloner le projet :
 ```bash
-git clone https://github.com/votre-repo/coach-sportif-platform.git
+git clone https://github.com/rachadelrhilani/CoachPro-POO
