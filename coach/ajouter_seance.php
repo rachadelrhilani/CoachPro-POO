@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $heure = $_POST['heure'] ?? '';
     $duree = $_POST['duree'] ?? '';
 
-    // validation backend
+    // validation de la date de seance
     if (strtotime($date) < strtotime(date('Y-m-d'))) {
         $error = "La date doit être aujourd'hui ou ultérieure.";
     } elseif ($duree <= 0) {
