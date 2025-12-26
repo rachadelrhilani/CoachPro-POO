@@ -58,7 +58,7 @@ $seances = $seanceModel->getByCoach($id_coach);
                         <tr class="border-b hover:bg-gray-50">
                             <td class="p-3"><?= htmlspecialchars($s['date_seance']) ?></td>
                             <td class="p-3"><?= htmlspecialchars($s['heure']) ?></td>
-                            <td class="p-3"><?= $s['duree'] ?> min</td>
+                            <td class="p-3"><?= htmlspecialchars($s['duree']) ?> min</td>
                             <td class="p-3">
                                 <span class="px-3 py-1 rounded-full text-xs
                                     <?= $s['statut'] === 'reservee' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' ?>">

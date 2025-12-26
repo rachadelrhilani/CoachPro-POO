@@ -13,24 +13,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $role = $_POST['role'];
     $discipline = $_POST['discipline'];
-    $annees_experience=$_POST['annees_experience'];
-    $description=$_POST['description'];
+    $annees_experience = $_POST['annees_experience'];
+    $description = $_POST['description'];
 
-    $user = new Utilisateur();
-    if ($user->register($email, $password, $role)) {
-        // id_user est maintenant dans $user->id_user via l’héritage
-        if ($role === 'coach') {
-            $coach = new Coach();
-            $coach->setIdUser($user->getIdUser()); // utilise le setter
-            $coach->create($nom, $prenom, $discipline, $annees_experience, $description);
-        } elseif ($role === 'sportif') {
-            $sportif = new Sportif();
-            $sportif->setIdUser($user->getIdUser());
-            $sportif->create($nom, $prenom);
-        }
-        $success = "Inscription réussie ! Vous pouvez vous connecter.";
+    $errors = [];
+
+    $nom = trim($_POST['nom']);
+    $prenom = trim($_POST['prenom']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $role = $_POST['role'];
+
+    if (strlen($nom) < 2) $errors[] = "Nom invalide.";
+    if (strlen($prenom) < 2) $errors[] = "Prénom invalide.";
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Email invalide.";
+    if (strlen($password) < 6) $errors[] = "Mot de passe trop court.";
+    if (!in_array($role, ['coach', 'sportif'])) $errors[] = "Rôle invalide.";
+
+    if ($role === 'coach') {
+        if (empty($_POST['discipline'])) $errors[] = "La discipline est obligatoire.";
+        if (!is_numeric($_POST['annees_experience']) || $_POST['annees_experience'] < 0)
+            $errors[] = "Années d'expérience incorrectes.";
+    }
+
+    if (!empty($errors)) {
+        $error = implode('<br>', $errors);
     } else {
-        $error = "Cet email est déjà utilisé.";
+        $user = new Utilisateur();
+        if ($user->register($email, $password, $role)) {
+            if ($role === 'coach') {
+                $coach = new Coach();
+                $coach->setIdUser($user->getIdUser());
+                $coach->create($nom, $prenom, $discipline, $annees_experience, $description);
+            } elseif ($role === 'sportif') {
+                $sportif = new Sportif();
+                $sportif->setIdUser($user->getIdUser());
+                $sportif->create($nom, $prenom);
+            }
+            $success = "Inscription réussie ! Vous pouvez vous connecter.";
+        } else {
+            $error = "Cet email est déjà utilisé.";
+        }
     }
 }
 ?>
@@ -46,12 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4">
-    <!-- Decorative circles -->
+
     <div class="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
     <div class="absolute bottom-10 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-    
+
     <div class="bg-white/95 backdrop-blur-xl p-10 rounded-3xl shadow-2xl w-full max-w-lg relative z-10 border border-white/20">
-        <!-- Header with icon -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span><?= $error ?></span>
             </div>
         <?php endif; ?>
-        
+
         <?php if (!empty($success)): ?>
             <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6 flex items-start">
                 <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -93,31 +115,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
-                    </svg>
-                </div>
                 <input type="email" name="email" placeholder="Email" class="input pl-12 peer" required>
                 <div class="input-focus-line"></div>
             </div>
 
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                    </svg>
-                </div>
                 <input type="password" name="password" placeholder="Mot de passe" class="input pl-12 peer" required>
                 <div class="input-focus-line"></div>
             </div>
 
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                </div>
                 <select name="role" class="input pl-12 peer appearance-none cursor-pointer" required>
                     <option value="">Choisir un rôle</option>
                     <option value="coach">🏆 Coach</option>
@@ -179,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: white;
             font-size: 15px;
         }
-        
+
         .input:focus {
             outline: none;
             border-color: #6366f1;
@@ -195,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: white;
             font-size: 14px;
         }
-        
+
         .input-coach:focus {
             outline: none;
             border-color: #6366f1;
@@ -212,8 +219,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transition: width 0.3s ease;
         }
 
-        .input:focus ~ .input-focus-line,
-        .input-coach:focus ~ .input-focus-line {
+        .input:focus~.input-focus-line,
+        .input-coach:focus~.input-focus-line {
             width: 100%;
         }
 
@@ -222,6 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
