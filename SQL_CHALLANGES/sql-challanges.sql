@@ -272,3 +272,12 @@ WHERE TIMESTAMPDIFF(
       ) < 24
 GROUP BY us.id, uc.id
 ORDER BY nombre_reservations DESC;
+/* =====================================================
+  challanges 7
+===================================================== */
+SELECT CONCAT(FLOOR(HOUR(s.heure)), ':00 - ', FLOOR(HOUR(s.heure)) + 1, ':00') AS tranche_horaire, COUNT(r.id) AS nombre_reservations 
+FROM seances s JOIN reservations r ON r.seance_id = s.id 
+GROUP BY tranche_horaire ORDER BY nombre_reservations DESC;
+/* =====================================================
+  challanges 8
+===================================================== */
