@@ -27,9 +27,18 @@ GROUP BY
 /* =====================================================
   challanges 2
 ===================================================== */
-/* 1 */SELECT 
+/* 1 */SELECT  
     u.nom,
-    u.prenom
+    u.prenom,
+    (SELECT 
+        CONCAT(sportifs.nom, ' ', sportifs.prenom) 
+     FROM users sportifs
+     JOIN reservations r2 ON r2.sportif_id = sportifs.id
+     WHERE MONTH(r2.reserved_at) = MONTH(r.reserved_at) 
+       AND YEAR(r2.reserved_at) = YEAR(r.reserved_at)
+     GROUP BY r2.sportif_id
+     ORDER BY COUNT(r2.id) DESC 
+     LIMIT 1) AS sportif_plus_reservation
 FROM users u
 JOIN sportifs s ON u.id = s.user_id
 JOIN reservations r ON r.sportif_id = s.user_id
@@ -40,7 +49,16 @@ SELECT
     u.prenom,
     COUNT(r.id) AS nombre_reservations,
     MONTH(r.reserved_at) AS mois,
-    YEAR(r.reserved_at) AS annee
+    YEAR(r.reserved_at) AS annee,
+    (SELECT 
+        CONCAT(sportifs.nom, ' ', sportifs.prenom)
+     FROM users sportifs
+     JOIN reservations r2 ON r2.sportif_id = sportifs.id
+     WHERE MONTH(r2.reserved_at) = MONTH(r.reserved_at) 
+       AND YEAR(r2.reserved_at) = YEAR(r.reserved_at)
+     GROUP BY r2.sportif_id
+     ORDER BY COUNT(r2.id) DESC 
+     LIMIT 1) AS sportif_plus_reservation
 FROM users u
 JOIN sportifs s ON u.id = s.user_id
 JOIN reservations r ON r.sportif_id = s.user_id
@@ -49,7 +67,16 @@ GROUP BY u.id, mois, annee;
 SELECT 
     MONTH(reserved_at) AS mois,
     YEAR(reserved_at) AS annee,
-    COUNT(*) AS total_reservations
+    COUNT(*) AS total_reservations,
+    (SELECT 
+        CONCAT(sportifs.nom, ' ', sportifs.prenom)
+     FROM users sportifs
+     JOIN reservations r2 ON r2.sportif_id = sportifs.id
+     WHERE MONTH(r2.reserved_at) = MONTH(reserved_at) 
+       AND YEAR(r2.reserved_at) = YEAR(reserved_at)
+     GROUP BY r2.sportif_id
+     ORDER BY COUNT(r2.id) DESC 
+     LIMIT 1) AS sportif_plus_reservation
 FROM reservations
 GROUP BY mois, annee;
 /* 4 */
@@ -58,7 +85,16 @@ SELECT
     u.prenom,
     COUNT(r.id) AS total_reservations,
     MONTH(r.reserved_at) AS mois,
-    YEAR(r.reserved_at) AS annee
+    YEAR(r.reserved_at) AS annee,
+    (SELECT 
+        CONCAT(sportifs.nom, ' ', sportifs.prenom)
+     FROM users sportifs
+     JOIN reservations r2 ON r2.sportif_id = sportifs.id
+     WHERE MONTH(r2.reserved_at) = MONTH(r.reserved_at) 
+       AND YEAR(r2.reserved_at) = YEAR(r.reserved_at)
+     GROUP BY r2.sportif_id
+     ORDER BY COUNT(r2.id) DESC 
+     LIMIT 1) AS sportif_plus_reservation
 FROM users u
 JOIN sportifs s ON u.id = s.user_id
 JOIN reservations r ON r.sportif_id = s.user_id
@@ -107,3 +143,30 @@ WHERE
     s1.heure < ADDTIME(s2.heure, SEC_TO_TIME(s2.duree * 60))
     AND s2.heure < ADDTIME(s1.heure, SEC_TO_TIME(s1.duree * 60))
 ORDER BY coach, s1.date_seance, s1.heure;
+/* =====================================================
+  challanges 4
+===================================================== */
+/* 1 */
+SELECT 
+    u.nom AS coach_nom,
+    u.prenom AS coach_prenom
+FROM users u
+JOIN coachs c ON u.id = c.user_id
+LEFT JOIN seances s ON s.coach_id = c.user_id
+LEFT JOIN reservations r ON r.seance_id = s.id
+WHERE DATEDIFF(CURDATE(), r.reserved_at) > 60 OR r.id IS NULL
+ORDER BY u.nom, u.prenom;
+/* 2 */
+SELECT 
+    u.nom AS coach_nom,
+    u.prenom AS coach_prenom
+FROM users u
+JOIN coachs c ON u.id = c.user_id
+JOIN seances s ON s.coach_id = c.user_id
+JOIN reservations r ON r.seance_id = s.id
+WHERE DATEDIFF(CURDATE(), r.reserved_at) <= 60
+GROUP BY u.id
+ORDER BY u.nom, u.prenom;
+/* =====================================================
+  challanges 5
+===================================================== */
