@@ -223,3 +223,52 @@ ORDER BY discipline, rang;
   challanges 6
 ===================================================== */
 /* 1 */
+SELECT
+    us.nom AS sportif_nom,
+    us.prenom AS sportif_prenom
+FROM reservations r
+JOIN sportifs sp ON sp.user_id = r.sportif_id
+JOIN users us ON us.id = sp.user_id
+JOIN seances s ON s.id = r.seance_id
+WHERE TIMESTAMPDIFF(
+        HOUR,
+        r.reserved_at,
+        TIMESTAMP(s.date_seance, s.heure)
+      ) < 24
+GROUP BY us.id;
+/* 2 */
+SELECT
+    us.nom AS sportif_nom,
+    us.prenom AS sportif_prenom,
+    COUNT(r.id) AS nombre_reservations
+FROM reservations r
+JOIN sportifs sp ON sp.user_id = r.sportif_id
+JOIN users us ON us.id = sp.user_id
+JOIN seances s ON s.id = r.seance_id
+WHERE TIMESTAMPDIFF(
+        HOUR,
+        r.reserved_at,
+        TIMESTAMP(s.date_seance, s.heure)
+      ) < 24
+GROUP BY us.id
+ORDER BY nombre_reservations DESC;
+
+/* 3 */
+SELECT
+    us.nom AS sportif_nom,
+    us.prenom AS sportif_prenom,
+    uc.nom AS coach_nom,
+    COUNT(r.id) AS nombre_reservations
+FROM reservations r
+JOIN sportifs sp ON sp.user_id = r.sportif_id
+JOIN users us ON us.id = sp.user_id
+JOIN seances s ON s.id = r.seance_id
+JOIN coachs c ON c.user_id = s.coach_id
+JOIN users uc ON uc.id = c.user_id
+WHERE TIMESTAMPDIFF(
+        HOUR,
+        r.reserved_at,
+        TIMESTAMP(s.date_seance, s.heure)
+      ) < 24
+GROUP BY us.id, uc.id
+ORDER BY nombre_reservations DESC;
