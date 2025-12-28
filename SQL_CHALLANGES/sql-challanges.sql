@@ -170,3 +170,56 @@ ORDER BY u.nom, u.prenom;
 /* =====================================================
   challanges 5
 ===================================================== */
+/* 1 */
+SELECT
+    discipline,
+    coach_nom,
+    coach_prenom,
+    total_reservations,
+    classement
+FROM (
+    SELECT
+        c.discipline,
+        u.nom AS coach_nom,
+        u.prenom AS coach_prenom,
+        COUNT(r.id) AS total_reservations,
+        RANK() OVER (
+            PARTITION BY c.discipline
+            ORDER BY COUNT(r.id) DESC
+        ) AS classement
+    FROM coachs c
+    JOIN users u ON u.id = c.user_id
+    JOIN seances s ON s.coach_id = c.user_id
+    JOIN reservations r ON r.seance_id = s.id
+    GROUP BY c.discipline, c.user_id
+) classement_coachs
+WHERE classement <= 3
+ORDER BY discipline, classement;
+/* 2 */
+SELECT
+    discipline,
+    coach_nom,
+    coach_prenom,
+    nombre_reservations,
+    rang
+FROM (
+    SELECT
+        c.discipline,
+        u.nom AS coach_nom,
+        u.prenom AS coach_prenom,
+        COUNT(r.id) AS nombre_reservations,
+        RANK() OVER (
+            PARTITION BY c.discipline
+            ORDER BY COUNT(r.id) DESC
+        ) AS rang
+    FROM coachs c
+    JOIN users u ON u.id = c.user_id
+    JOIN seances s ON s.coach_id = c.user_id
+    JOIN reservations r ON r.seance_id = s.id
+    GROUP BY c.discipline, c.user_id
+) classement
+ORDER BY discipline, rang;
+/* =====================================================
+  challanges 6
+===================================================== */
+/* 1 */
