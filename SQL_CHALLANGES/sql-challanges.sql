@@ -64,3 +64,46 @@ JOIN sportifs s ON u.id = s.user_id
 JOIN reservations r ON r.sportif_id = s.user_id
 GROUP BY u.id, mois, annee
 ORDER BY total_reservations DESC;
+/* =====================================================
+  challanges 3
+===================================================== */
+/* 1 */
+SELECT 
+    u.nom AS coach,
+    s1.date_seance,
+    s1.heure AS heure_debut,
+    ADDTIME(s1.heure, SEC_TO_TIME(s1.duree * 60)) AS heure_fin,
+    s1.id AS id_seance
+
+FROM seances s1
+JOIN seances s2
+    ON s1.coach_id = s2.coach_id
+    AND s1.date_seance = s2.date_seance
+    AND s1.id <> s2.id  
+
+JOIN users u 
+    ON u.id = s1.coach_id
+
+WHERE
+    s1.heure < ADDTIME(s2.heure, SEC_TO_TIME(s2.duree * 60))
+    AND s2.heure < ADDTIME(s1.heure, SEC_TO_TIME(s1.duree * 60))
+
+ORDER BY u.nom, s1.date_seance, s1.heure;
+/* 2 */
+SELECT DISTINCT
+    u.nom AS coach,
+    s1.date_seance,
+    s1.heure AS heure_debut,
+    ADDTIME(s1.heure, SEC_TO_TIME(s1.duree * 60)) AS heure_fin,
+    s1.id AS id_seance
+FROM seances s1
+JOIN seances s2
+    ON s1.coach_id = s2.coach_id
+    AND s1.date_seance = s2.date_seance
+    AND s1.id <> s2.id
+JOIN users u
+    ON u.id = s1.coach_id
+WHERE
+    s1.heure < ADDTIME(s2.heure, SEC_TO_TIME(s2.duree * 60))
+    AND s2.heure < ADDTIME(s1.heure, SEC_TO_TIME(s1.duree * 60))
+ORDER BY coach, s1.date_seance, s1.heure;
