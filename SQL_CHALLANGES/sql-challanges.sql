@@ -281,3 +281,27 @@ GROUP BY tranche_horaire ORDER BY nombre_reservations DESC;
 /* =====================================================
   challanges 8
 ===================================================== */
+SELECT
+    u.nom,
+    u.prenom,
+    'coach' AS role,
+    NULLIF(COUNT(s.id), 0) AS nombre_seances_ou_reservations
+FROM users u
+JOIN coachs c ON c.user_id = u.id
+LEFT JOIN seances s ON s.coach_id = c.user_id
+GROUP BY u.id
+
+UNION ALL
+
+SELECT
+    u.nom,
+    u.prenom,
+    'sportif' AS role,
+    NULLIF(COUNT(r.id), 0) AS nombre_seances_ou_reservations
+FROM users u
+JOIN sportifs sp ON sp.user_id = u.id
+LEFT JOIN reservations r ON r.sportif_id = sp.user_id
+GROUP BY u.id;
+/* =====================================================
+  challanges 9
+===================================================== */
