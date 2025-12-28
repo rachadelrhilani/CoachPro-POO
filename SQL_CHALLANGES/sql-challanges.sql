@@ -305,3 +305,137 @@ GROUP BY u.id;
 /* =====================================================
   challanges 9
 ===================================================== */
+/* 1 */
+SELECT
+    u.nom AS coach_nom,
+    u.prenom AS coach_prenom,
+    COALESCE(s.id, 'Aucune séance') AS seance_id,
+    COALESCE(s.date_seance, '—') AS date_seance,
+    COALESCE(s.heure, '—') AS heure,
+    COALESCE(s.duree, 0) AS duree_minutes
+FROM users u
+JOIN coachs c ON c.user_id = u.id
+LEFT JOIN seances s ON s.coach_id = c.user_id
+ORDER BY u.nom, u.prenom, s.date_seance, s.heure;
+/* 2 */
+SELECT
+    uc.nom   AS coach_nom,
+    uc.prenom AS coach_prenom,
+    COALESCE(us.nom, 'NULL')   AS sportif_nom,
+    COALESCE(us.prenom, 'NULL') AS sportif_prenom
+FROM users uc
+JOIN coachs c ON c.user_id = uc.id
+LEFT JOIN seances s ON s.coach_id = c.user_id
+LEFT JOIN reservations r ON r.seance_id = s.id
+LEFT JOIN sportifs sp ON sp.user_id = r.sportif_id
+LEFT JOIN users us ON us.id = sp.user_id
+ORDER BY uc.nom, uc.prenom, us.nom, us.prenom;
+
+/* 3 */
+SELECT
+    uc.nom AS coach_nom,
+    uc.prenom AS coach_prenom,
+
+    COALESCE(us.nom, 'NULL') AS sportif_nom,
+    COALESCE(us.prenom, 'NULL') AS sportif_prenom,
+
+    COALESCE(r.reserved_at, 'NULL') AS date_reservation,
+    COALESCE(s.statut, 'NULL') AS statut_seance
+FROM users uc
+JOIN coachs c ON c.user_id = uc.id
+LEFT JOIN seances s ON s.coach_id = c.user_id
+LEFT JOIN reservations r ON r.seance_id = s.id
+LEFT JOIN sportifs sp ON sp.user_id = r.sportif_id
+LEFT JOIN users us ON us.id = sp.user_id
+ORDER BY
+    uc.nom,
+    uc.prenom,
+    r.reserved_at;
+
+/* 4 */
+SELECT
+    uc.nom AS coach_nom,
+    uc.prenom AS coach_prenom,
+
+    COALESCE(s.date_seance, '—') AS date_seance,
+    COALESCE(s.heure, '—') AS heure,
+
+    COALESCE(r.reserved_at, '—') AS date_reservation,
+    COALESCE(s.statut, '—') AS statut_seance
+FROM users uc
+JOIN coachs c ON c.user_id = uc.id
+LEFT JOIN seances s ON s.coach_id = c.user_id
+LEFT JOIN reservations r ON r.seance_id = s.id
+ORDER BY
+    uc.nom,
+    uc.prenom,
+    s.date_seance,
+    s.heure;
+/* =====================================================
+  challanges 10
+===================================================== */
+/* 1 */
+SELECT
+    DATE_FORMAT(s.date_seance, '%Y-%m') AS mois,
+    c.discipline,
+    COUNT(s.id) AS total_seances,
+   
+FROM seances s
+JOIN coachs c ON c.user_id = s.coach_id
+GROUP BY
+    DATE_FORMAT(s.date_seance, '%Y-%m'),
+    c.discipline
+/* 2 */
+SELECT
+    DATE_FORMAT(s.date_seance, '%Y-%m') AS mois,
+    c.discipline,
+    SUM(CASE 
+            WHEN s.statut = 'reservee' THEN 1 
+            ELSE 0 
+        END) AS seances_reservees,
+FROM seances s
+JOIN coachs c ON c.user_id = s.coach_id
+GROUP BY
+    DATE_FORMAT(s.date_seance, '%Y-%m'),
+    c.discipline
+/* 3 */
+SELECT
+    DATE_FORMAT(s.date_seance, '%Y-%m') AS mois,
+    c.discipline,
+    ROUND(
+        SUM(CASE 
+                WHEN s.statut = 'reservee' THEN 1 
+                ELSE 0 
+            END) * 100.0 / COUNT(s.id),
+        2
+    ) AS taux_reservation
+FROM seances s
+JOIN coachs c ON c.user_id = s.coach_id
+GROUP BY
+    DATE_FORMAT(s.date_seance, '%Y-%m'),
+    c.discipline
+
+/* 4 */
+SELECT
+    DATE_FORMAT(s.date_seance, '%Y-%m') AS mois,
+    c.discipline,
+    COUNT(s.id) AS total_seances,
+    SUM(CASE 
+            WHEN s.statut = 'reservee' THEN 1 
+            ELSE 0 
+        END) AS seances_reservees,
+    ROUND(
+        SUM(CASE 
+                WHEN s.statut = 'reservee' THEN 1 
+                ELSE 0 
+            END) * 100.0 / COUNT(s.id),
+        2
+    ) AS taux_reservation
+FROM seances s
+JOIN coachs c ON c.user_id = s.coach_id
+GROUP BY
+    DATE_FORMAT(s.date_seance, '%Y-%m'),
+    c.discipline
+ORDER BY
+    mois,
+    taux_reservation DESC;
